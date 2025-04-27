@@ -66,11 +66,14 @@ filtered_df = df_ordered[df_ordered.apply(lambda row: row.map(lambda x: isinstan
 
 
 def print_md(df):
-    MAPPDING = {
-        "01810": "米儿",
-        "512890": "红利",
-        "600519": "台子",
-    }
+    from pathlib import Path
+    symbols_file = Path("symbols.txt")
+    MAPPDING = {}
+    with open(symbols_file, 'r', encoding='utf-8') as f:
+        for line in f:
+            symbol, _, short_name = line.strip().split(',')
+            # 这里简单取名称的前两个字作为简称，可根据实际需求调整
+            MAPPDING[symbol] = short_name
 
     if df.empty:
         return """
@@ -127,7 +130,7 @@ NOTICE = f"""
 </div>
 """
 
-with open(f"output/{CURRENT_DATE}.md", "w") as f:
+with open(f"output/index.md", "w") as f:
     f.write(HEADER)
 
     f.write(NOTICE)
@@ -140,5 +143,20 @@ with open(f"output/{CURRENT_DATE}.md", "w") as f:
     f.write("\n# 所有阵容\n")
     f.write(print_md(df_ordered))
 
-with open(f"output/{CURRENT_DATE}.md") as f:
+with open(f"output/index.md") as f:
     print(f.read())
+
+import markdown
+
+# 读取 Markdown 文件
+with open('output/index.md', 'r', encoding='utf-8') as f:
+    md_content = f.read()
+
+# 将 Markdown 内容转换为 HTML
+html_content = markdown.markdown(md_content, extensions=['tables'])
+
+# 将 HTML 内容写入新文件
+with open('output/index.html', 'w', encoding='utf-8') as f:
+    f.write(html_content)
+
+print('Markdown 文件已成功转换为 HTML 文件。')

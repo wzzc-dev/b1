@@ -44,11 +44,13 @@ FUNC_MAPPING = {
     "HK_STOCK": ak.stock_hk_hist,
 }
 
-SYMBOLS = {
-    "01810": ("HK_STOCK", "小米集团-W"),
-    "512890": ("FUND_ETF", "红利低波ETF"),
-    "600519": ("A_STOCK", "贵州茅台"),
-}
+# 假设文本文件名为 symbols.txt，位于项目根目录
+symbols_file = Path("symbols.txt")
+SYMBOLS = {}
+with open(symbols_file, 'r', encoding='utf-8') as f:
+    for line in f:
+        symbol, type, name = line.strip().split(',')
+        SYMBOLS[symbol] = (type, name)
 
 
 dfs = []
