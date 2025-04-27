@@ -70,10 +70,14 @@ def print_md(df):
     symbols_file = Path("symbols.txt")
     MAPPDING = {}
     with open(symbols_file, 'r', encoding='utf-8') as f:
-        for line in f:
-            symbol, _, short_name = line.strip().split(',')
-            # 这里简单取名称的前两个字作为简称，可根据实际需求调整
-            MAPPDING[symbol] = short_name
+        lines = f.readlines()
+        for line in lines:
+            parts = line.strip().split(',')
+            if len(parts) == 3:
+                symbol, _, short_name = parts
+                MAPPDING[symbol] = short_name
+            else:
+                print(f"跳过无效行: {line.strip()}")
 
     if df.empty:
         return """
@@ -99,7 +103,9 @@ def print_md(df):
     markdown = "| 名称 | 指标 | 日线 | 周线 | 月线 |\n"
     markdown += "|:----:|:----:|:----:|:----:|:----:|\n"
     for _, row in df.iterrows():
-        markdown += f"| &emsp;&emsp; {MAPPDING[row['代码']]} &emsp;&emsp; | 收盘价<br>J值 | {row['日线_收盘']}<br>{row['日线_J值']} | {row['周线_收盘']}<br>{row['周线_J值']} | {row['月线_收盘']}<br>{row['月线_J值']} |\n"
+        if row['代码'] in MAPPDING:
+            markdown += f"| &emsp;&emsp; {MAPPDING[row['代码']]} &emsp;&emsp; | 收盘价<br>J值 | {row['日线_收盘']}<br>{row['日线_J值']} | {row['周线_收盘']}<br>{row['周线_J值']} | {row['月线_收盘']}<br>{row['月线_J值']} |\n"
+
     return markdown
 
 
