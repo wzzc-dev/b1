@@ -49,8 +49,12 @@ symbols_file = Path("symbols.txt")
 SYMBOLS = {}
 with open(symbols_file, 'r', encoding='utf-8') as f:
     for line in f:
-        symbol, type, name = line.strip().split(',')
-        SYMBOLS[symbol] = (type, name)
+        parts = line.strip().split(',')
+        if len(parts) == 3:
+            symbol, type, name = parts
+            SYMBOLS[symbol] = (type, name)
+        else:
+            print(f"跳过无效行: {line.strip()}")
 
 
 dfs = []
