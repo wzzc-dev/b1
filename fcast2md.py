@@ -105,7 +105,12 @@ def print_md(df):
 
 HEADER = """
 <style>
-
+ table {
+   margin: 0 auto;
+ }
+ h1 {
+  text-align: center;
+ }
 td:nth-child(1),  
 td:nth-child(2) { 
   vertical-align: middle !important;
