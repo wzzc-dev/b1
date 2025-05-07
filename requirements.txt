@@ -1,0 +1,5 @@
+akshare==1.16.83
+Markdown==3.8
+pandas==2.2.3
+pillow==11.2.1
+stock-pandas==1.4.6
