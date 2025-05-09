@@ -36,10 +36,10 @@ jobs:
         uses: actions/setup-python@v4
         with:
           python-version: '3.x'
-      - name: Install dependencies
-        run: |
-          python -m pip install --upgrade pip    
-          pip install akshare stock-pandas Pillow pandas markdown
+      # - name: Install dependencies
+      #   run: |
+      #     python -m pip install --upgrade pip    
+      #     pip install akshare stock-pandas Pillow pandas markdown
       - name: Run gen_fcast.py
         run: python gen_fcast.py
       - name: Run fcast2md.py
