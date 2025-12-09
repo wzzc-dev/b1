@@ -94,6 +94,7 @@ for sym, (type, name) in SYMBOLS.items():
         func = FUNC_MAPPING[type]
         retry_count = 0
         max_retries = 3
+        success = False
         while retry_count < max_retries:
             try:
                 # 根据不同的数据源调整参数
@@ -116,6 +117,7 @@ for sym, (type, name) in SYMBOLS.items():
                 else:
                     # 基金函数接受timeout参数
                     df = func(symbol=args.symbol, period=args.period, start_date=args.start_date, end_date=args.end_date, adjust=args.adjust, timeout=30)
+                success = True
                 break
             except (requests.exceptions.ConnectionError, requests.exceptions.ReadTimeout, TypeError) as e:
                 retry_count += 1
@@ -123,7 +125,10 @@ for sym, (type, name) in SYMBOLS.items():
                 time.sleep(5 * retry_count)  # 指数退避
                 if retry_count == max_retries:
                     print(f"多次重试失败，跳过 {args.symbol} {args.period}")
-                    raise
+        
+        if not success:
+            continue
+            
         # 先检查数据结构
         print(f"数据列名: {list(df.columns)}")
         
